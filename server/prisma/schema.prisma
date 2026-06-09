@@ -17,6 +17,7 @@ model User {
   createdAt DateTime @default(now())
 
   participations SeasonParticipant[]
+  submissions    Submission[]
 }
 
 model Season {
@@ -47,4 +48,40 @@ model SeasonParticipant {
   createdAt DateTime @default(now())
 
   @@unique([userId, seasonId])
+}
+
+model Quest {
+  id          String   @id @default(cuid())
+
+  title       String
+  description String?
+
+  category    String
+  difficulty  String
+
+  xpReward    Int
+
+  isActive    Boolean @default(true)
+
+  createdAt   DateTime @default(now())
+
+  submissions Submission[]
+}
+
+model Submission {
+  id String @id @default(cuid())
+
+  answer String?
+
+  status String @default("PENDING")
+
+  awardedXP Int @default(0)
+
+  userId String
+  questId String
+
+  user User @relation(fields: [userId], references: [id])
+  quest Quest @relation(fields: [questId], references: [id])
+
+  createdAt DateTime @default(now())
 }

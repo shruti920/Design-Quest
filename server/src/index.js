@@ -6,6 +6,13 @@ const userRoutes = require("./routes/userRoutes");
 
 app.use("/api/users", userRoutes);
 
+const questRoutes = require("./routes/questRoutes");
+
+app.use("/api/quests", questRoutes);
+const submissionRoutes = require("./routes/submissionRoutes");
+
+app.use("/api/submissions", submissionRoutes);
+
 app.use(cors());
 app.use(express.json());
 
