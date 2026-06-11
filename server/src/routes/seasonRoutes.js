@@ -7,48 +7,27 @@ require("../config/supabase");
 
 
 
-// CREATE QUEST
-router.post("/", async (req,res)=>{
+router.post("/", async (req, res) => {
 
-try{
+try {
 
 const {
-seasonId,
 title,
-description,
-questType,
-difficulty,
-xpReward,
-hint
+description
 }
-=
-req.body;
+= req.body;
 
-
-
-const { data,error }=
+const { data, error } =
 await supabase
-.from("quests")
+.from("seasons")
 .insert([
 {
-season_id:seasonId,
-
 title,
-
 description,
-
-quest_type:questType,
-
-difficulty,
-
-xp_reward:xpReward,
-
-hint
+is_active:true
 }
 ])
 .select();
-
-
 
 if(error)
 throw error;
@@ -72,24 +51,14 @@ err.message
 
 
 
-// GET QUESTS
 router.get("/", async (req,res)=>{
 
 try{
 
 const { data,error }=
 await supabase
-.from("quests")
-.select(`
-*,
-seasons(*)
-`)
-.order(
-"created_at",
-{
-ascending:false
-}
-);
+.from("seasons")
+.select("*");
 
 if(error)
 throw error;
@@ -109,8 +78,6 @@ err.message
 }
 
 });
-
-
 
 module.exports =
 router;

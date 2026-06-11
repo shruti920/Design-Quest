@@ -1,35 +1,71 @@
 const express = require("express");
-const prisma = require("../lib/prisma");
-
 const router = express.Router();
 
+const supabase =
+require("../config/supabase");
+
+
+
 router.post("/", async (req, res) => {
-  try {
-    const { name, email, department, year } = req.body;
 
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        department,
-        year,
-      },
-    });
+try {
 
-    res.status(201).json(user);
-  } catch (error) {
-    console.error(error);
+const { name, email } = req.body;
 
-    res.status(500).json({
-      message: "Failed to create user",
-    });
-  }
+const { data, error } =
+await supabase
+.from("users")
+.insert([
+{
+name,
+email
+}
+])
+.select();
+
+
+
+if (error) throw error;
+
+res.status(201).json(data);
+
+}
+
+catch (err) {
+
+res.status(500).json({
+message: err.message
 });
 
+}
+
+});
+
+
+
 router.get("/", async (req, res) => {
-  res.json({
-    message: "Users route working 🚀"
-  });
+
+try {
+
+const { data, error } =
+await supabase
+.from("users")
+.select("*");
+
+if (error) throw error;
+
+res.json(data);
+
+}
+
+catch (err) {
+
+res.status(500).json({
+message: err.message
+});
+
+}
+
 });
 
 module.exports = router;
